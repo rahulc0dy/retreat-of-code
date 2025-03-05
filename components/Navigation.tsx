@@ -1,0 +1,89 @@
+import React from "react";
+import Link from "next/link";
+
+interface NavLink {
+  label: string;
+  href: string;
+}
+
+interface NavLinks {
+  sections: Array<NavLink>;
+  info: Array<NavLink>;
+}
+
+const navLinks: NavLinks = {
+  sections: [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "About",
+      href: "/about",
+    },
+    {
+      label: "Events",
+      href: "/events",
+    },
+    {
+      label: "Contact",
+      href: "/contact",
+    },
+    {
+      label: "Settings",
+      href: "/settings",
+    },
+  ],
+  info: [
+    {
+      label: "Calendar",
+      href: "/calendar",
+    },
+    {
+      label: "Leaderboard",
+      href: "/leaderboard",
+    },
+    {
+      label: "Stats",
+      href: "/stats",
+    },
+  ],
+};
+
+const Navigation = () => {
+  return (
+    <nav className="items-center p-2">
+      <div className="flex items-center gap-4">
+        <h1 className="text-lavender text-lg font-medium">Retreat of Code</h1>
+        {navLinks.sections.map((item) => (
+          <Link
+            href={item.href}
+            key={item.label}
+            className="text-lavender/60 hover:text-lavender"
+          >
+            [{item.label}]
+          </Link>
+        ))}
+        {/*  TODO: Profile logic */}
+        <div>
+          Rahul Chakraborty (rahulc0dy){" "}
+          <span className="text-yellow">12*</span>{" "}
+        </div>
+      </div>
+      <div className="flex items-center gap-4">
+        {/* TODO: Year logic */}
+        <h1 className="text-lavender/40">year=2024</h1>
+        {navLinks.info.map((item) => (
+          <Link
+            href={item.href}
+            key={item.label}
+            className="text-lavender/60 hover:text-lavender"
+          >
+            [{item.label}]
+          </Link>
+        ))}
+      </div>
+    </nav>
+  );
+};
+export default Navigation;

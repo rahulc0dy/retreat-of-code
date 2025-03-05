@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Poppins, Fira_Code } from "next/font/google";
+import { Fira_Code, JetBrains_Mono } from "next/font/google";
 import "@/styles/globals.css";
 
-const poppins = Poppins({
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+const jetBrainsMono = JetBrains_Mono({
   display: "swap",
   preload: true,
-  variable: "--font-poppins",
+  variable: "--font-jetbrains",
 });
 
 const firaCode = Fira_Code({
   variable: "--font-code",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -25,10 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${poppins.className} ${firaCode.variable} antialiased`}>
-        {children}
-      </body>
+    <html
+      lang="en"
+      className={`${firaCode.variable} ${jetBrainsMono.variable} antialiased`}
+    >
+      <body>{children}</body>
     </html>
   );
 }

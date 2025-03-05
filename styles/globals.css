@@ -1,10 +1,6 @@
 @import "tailwindcss";
 
-:root {
-  font-family: var(--font-poppins);
-}
-
-:root {
+@theme {
   --color-rosewater: hsl(10deg, 56%, 91%);
   --color-flamingo: hsl(0deg, 59%, 88%);
   --color-pink: hsl(316deg, 72%, 86%);
@@ -31,9 +27,20 @@
   --color-base: hsl(240deg, 21%, 15%);
   --color-mantle: hsl(240deg, 21%, 12%);
   --color-crust: hsl(240deg, 23%, 9%);
+
+  --font-sans: var(--font-code);
+  --font-jet: var(--font-jetbrains);
+}
+
+.glow {
+  text-shadow: 0 0 2px currentColor;
+}
+
+code {
+  @apply text-text bg-crust border-overlay-0/50 border p-3 font-mono;
 }
 
 body {
-  background-color: var(--color-zinc-900);
-  color: var(--color-zinc-50);
+  background-color: var(--color-base);
+  color: var(--color-text);
 }
