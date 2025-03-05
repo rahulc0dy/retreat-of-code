@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+:root {
+  font-family: var(--font-poppins);
+}
+
+:root {
+  --color-rosewater: hsl(10deg, 56%, 91%);
+  --color-flamingo: hsl(0deg, 59%, 88%);
+  --color-pink: hsl(316deg, 72%, 86%);
+  --color-mauve: hsl(267deg, 84%, 81%);
+  --color-red: hsl(343deg, 81%, 75%);
+  --color-maroon: hsl(350deg, 65%, 77%);
+  --color-peach: hsl(23deg, 92%, 75%);
+  --color-yellow: hsl(41deg, 86%, 83%);
+  --color-green: hsl(115deg, 54%, 76%);
+  --color-teal: hsl(170deg, 57%, 73%);
+  --color-sky: hsl(189deg, 71%, 73%);
+  --color-sapphire: hsl(199deg, 76%, 69%);
+  --color-blue: hsl(217deg, 92%, 76%);
+  --color-lavender: hsl(232deg, 97%, 85%);
+  --color-text: hsl(226deg, 64%, 88%);
+  --color-subtext-1: hsl(227deg, 35%, 80%);
+  --color-subtext-0: hsl(228deg, 24%, 72%);
+  --color-overlay-2: hsl(228deg, 17%, 64%);
+  --color-overlay-1: hsl(230deg, 13%, 55%);
+  --color-overlay-0: hsl(231deg, 11%, 47%);
+  --color-surface-2: hsl(233deg, 12%, 39%);
+  --color-surface-1: hsl(234deg, 13%, 31%);
+  --color-surface-0: hsl(237deg, 16%, 23%);
+  --color-base: hsl(240deg, 21%, 15%);
+  --color-mantle: hsl(240deg, 21%, 12%);
+  --color-crust: hsl(240deg, 23%, 9%);
+}
+
+body {
+  background-color: var(--color-zinc-900);
+  color: var(--color-zinc-50);
+}
