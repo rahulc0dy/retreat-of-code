@@ -22,5 +22,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run ESLint
+      - name: Run Build
+        env:
+          DATABASE_URL: "postgresql://dummy_url:dummy_user@dummy_domain.tech"
+          AUTH_SECRET: "auth_secret"
+          AUTH_GOOGLE_CLIENT_ID: "dummy_id.apps.googleusercontent.com"
+          AUTH_GOOGLE_CLIENT_SECRET: "client-secretapplication"
         run: npm run build
