@@ -7,7 +7,7 @@ const AboutPage: React.FunctionComponent = () => {
       <section>
         <h1 className="glow">About Retreat of Code</h1>
         <p className="text-overlay-1 font-light">
-          Hi! I'm{" "}
+          Hi! I&#39;m{" "}
           <Link
             href="https://github.com/rahulc0dy"
             className="text-lavender/60 hover:text-lavender"
@@ -27,14 +27,14 @@ const AboutPage: React.FunctionComponent = () => {
         <p className="text-overlay-1 font-light">
           Retreat of Code is a unique collection of programming challenges and
           code retreats designed to improve your coding skills and creative
-          problem-solving abilities. Whether you're an aspiring developer or a
-          seasoned programmer, you'll find challenges that can be solved in any
-          programming language you choose. Many use these challenges for
+          problem-solving abilities. Whether you&#39;re an aspiring developer or
+          a seasoned programmer, you&apos;ll find challenges that can be solved
+          in any programming language you choose. Many use these challenges for
           interview prep, professional training, coursework, or just for fun.
         </p>
         <p className="text-overlay-1 font-light">
-          You don't need an advanced computer science background—just a bit of
-          coding know-how and a willingness to learn. Even older hardware can
+          You don&#39;t need an advanced computer science background—just a bit
+          of coding know-how and a willingness to learn. Even older hardware can
           handle the puzzles quickly.
         </p>
       </section>
@@ -43,11 +43,12 @@ const AboutPage: React.FunctionComponent = () => {
         <h2 className="text-text my-3 text-lg">--- General Tips ---</h2>
         <p className="text-overlay-1 font-light">
           If you get stuck on a challenge, start by testing your solution
-          against the provided examples. If your results don't match, re-read
-          the problem description—perhaps there’s a detail you misunderstood.
-          Once the examples work, create additional test cases to ensure your
-          solution is robust. And if you’re still having trouble, take a break
-          or discuss the challenge with a friend or community member.
+          against the provided examples. If your results don&#39;t match,
+          re-read the problem description—perhaps there’s a detail you
+          misunderstood. Once the examples work, create additional test cases to
+          ensure your solution is robust. And if you’re still having trouble,
+          take a break or discuss the challenge with a friend or community
+          member.
         </p>
       </section>
 
