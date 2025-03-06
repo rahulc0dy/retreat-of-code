@@ -1,5 +1,8 @@
 # Retreat of Code
 
+[![Lint](https://github.com/rahulc0dy/retreat-of-code/actions/workflows/eslint.yml/badge.svg)](https://github.com/rahulc0dy/retreat-of-code/actions/workflows/eslint.yml)
+[![Build](https://github.com/rahulc0dy/retreat-of-code/actions/workflows/builds.yml/badge.svg)](https://github.com/rahulc0dy/retreat-of-code/actions/workflows/builds.yml)
+
 Retreat of Code is a collection of engaging programming challenges and code retreats designed to boost your coding skills and creative problem-solving abilities. Whether you're a beginner or an experienced developer, you'll find puzzles that can be solved in any programming language you choose.
 
 ## Features
