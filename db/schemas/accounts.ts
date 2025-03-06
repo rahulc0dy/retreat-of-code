@@ -1,7 +1,11 @@
 import { integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { users } from "@/db/schemas/users";
+import { sql } from "drizzle-orm";
 
 export const accounts = pgTable("account", {
+  id: uuid("id")
+    .default(sql`uuid_generate_v4()`)
+    .primaryKey(),
   userId: uuid("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
