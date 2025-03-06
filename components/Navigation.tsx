@@ -1,5 +1,8 @@
 import React from "react";
 import Link from "next/link";
+import SignInButton from "@/components/SignInButton";
+import { auth } from "@/auth";
+import SignOutButton from "@/components/SignOutButton";
 
 interface NavLink {
   label: string;
@@ -50,7 +53,8 @@ const navLinks: NavLinks = {
   ],
 };
 
-const Navigation = () => {
+const Navigation = async () => {
+  const session = await auth();
   return (
     <nav className="items-center p-2">
       <div className="flex items-center gap-4">
@@ -65,9 +69,16 @@ const Navigation = () => {
           </Link>
         ))}
         {/*  TODO: Profile logic */}
-        <div>
-          Rahul Chakraborty (rahulc0dy){" "}
-          <span className="text-yellow">12*</span>{" "}
+        <div className="flex flex-wrap items-center">
+          {!session?.user ? (
+            <SignInButton />
+          ) : (
+            <>
+              <SignOutButton className={"mr-4"} />
+              <p className="mr-2 inline">{session?.user.name}</p>
+              <span className="text-yellow">12*</span>
+            </>
+          )}
         </div>
       </div>
       <div className="flex items-center gap-4">
