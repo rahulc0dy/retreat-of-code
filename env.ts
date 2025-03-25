@@ -10,12 +10,16 @@ export const {
   DATABASE_URL,
   AUTH_GOOGLE_CLIENT_SECRET,
   AUTH_GOOGLE_CLIENT_ID,
+  NOTION_SECRET,
+  NOTION_DATABASE_ID,
 } = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
     AUTH_SECRET: z.string(),
     AUTH_GOOGLE_CLIENT_ID: z.string(),
     AUTH_GOOGLE_CLIENT_SECRET: z.string(),
+    NOTION_SECRET: z.string().nonempty(),
+    NOTION_DATABASE_ID: z.string(),
   },
 
   /**
