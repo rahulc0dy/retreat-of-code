@@ -25,17 +25,38 @@ export default async function Home() {
           </p>
         ) : data?.results?.length ? (
           <ul className="space-y-2">
-            {data.results.map((item) => (
-              <li key={item.id}>
-                <Link
-                  href={`/questions/${item.id}`}
-                  className="text-blue-500 hover:underline"
-                >
-                  {item?.properties?.Name?.title?.[0]?.plain_text ||
-                    "Untitled Question"}
-                </Link>
-              </li>
-            ))}
+            {data.results.map((item) => {
+              if ("properties" in item) {
+                const nameProp = item.properties["Name"];
+                if (nameProp && nameProp.type === "title") {
+                  const titleField = nameProp.title;
+                  if (Array.isArray(titleField) && titleField.length > 0) {
+                    const text = titleField[0].plain_text;
+                    return (
+                      <li key={item.id}>
+                        <Link
+                          href={`/questions/${item.id}`}
+                          className="text-blue-500 hover:underline"
+                        >
+                          {text}
+                        </Link>
+                      </li>
+                    );
+                  } else {
+                    return (
+                      <li key={item.id}>
+                        <Link
+                          href={`/questions/${item.id}`}
+                          className="text-blue-500 hover:underline"
+                        >
+                          Untitled Question
+                        </Link>
+                      </li>
+                    );
+                  }
+                }
+              }
+            })}
           </ul>
         ) : (
           <p>No questions available at this time.</p>
