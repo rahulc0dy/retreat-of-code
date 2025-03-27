@@ -11,19 +11,35 @@ export default async function Home() {
     })
   );
 
-  error ? console.error(error) : console.log(data);
+  if (error) {
+    console.error(error);
+  }
 
   return (
     <>
       <div className="px-2">
-        <h1>
-          {data &&
-            data?.results.map((item) => (
-              <Link href={`/questions/${item.id}`} key={item.id}>
-                {item?.properties?.Name.title[0].plain_text}
-              </Link>
+        <h1 className="mb-4 text-2xl font-bold">Available Questions</h1>
+        {error ? (
+          <p className="text-red-500">
+            Failed to load questions. Please try again later.
+          </p>
+        ) : data?.results?.length ? (
+          <ul className="space-y-2">
+            {data.results.map((item) => (
+              <li key={item.id}>
+                <Link
+                  href={`/questions/${item.id}`}
+                  className="text-blue-500 hover:underline"
+                >
+                  {item?.properties?.Name?.title?.[0]?.plain_text ||
+                    "Untitled Question"}
+                </Link>
+              </li>
             ))}
-        </h1>
+          </ul>
+        ) : (
+          <p>No questions available at this time.</p>
+        )}
       </div>
     </>
   );

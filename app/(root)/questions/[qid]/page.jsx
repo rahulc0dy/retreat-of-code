@@ -13,11 +13,13 @@ const QuestionPage = async ({ params }) => {
     return <div>Error loading content.</div>;
   }
 
-  console.log(data);
-
   return (
     <main className="p-2 font-thin">
-      {<NotionRenderer blockMap={data.results} />}
+      {data?.results ? (
+        <NotionRenderer blockMap={data.results} />
+      ) : (
+        <div className="py-4">No content available for this question.</div>
+      )}
     </main>
   );
 };
