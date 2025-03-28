@@ -83,7 +83,7 @@ const Navigation = async () => {
       </div>
       <div className="flex flex-wrap items-center gap-4">
         {/* TODO: Year logic */}
-        <h1 className="text-lavender/40">year=2024</h1>
+        <h1 className="text-lavender/40">year=2025</h1>
         {navLinks.info.map((item) => (
           <Link
             href={item.href}

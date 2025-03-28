@@ -41,7 +41,7 @@ pre code {
 }
 
 :not(pre) > code {
-  @apply text-text bg-crust border-overlay-0/50 block w-max border p-1 font-mono;
+  @apply text-text bg-crust border-overlay-0/50 w-max border p-1 font-mono;
 }
 
 body {

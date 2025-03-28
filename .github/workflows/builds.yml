@@ -32,6 +32,4 @@ jobs:
           AUTH_SECRET: "auth_secret"
           AUTH_GOOGLE_CLIENT_ID: "dummy_id.apps.googleusercontent.com"
           AUTH_GOOGLE_CLIENT_SECRET: "client-secretapplication"
-          NOTION_SECRET: "abcdefghi"
-          NOTION_DATABASE_ID: "abcd1234"
         run: pnpm run build
