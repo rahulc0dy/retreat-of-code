@@ -1,14 +1,32 @@
 import { getQuestionData } from "@/lib/questions";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
+import { z } from "zod";
 
 interface QuestionPageProps {
-  params: { year: string; day: string };
+  params: Promise<{ year: string; day: string }>;
 }
 
+const QuestionParamsSchema = z.object({
+  year: z
+    .string()
+    .regex(/^\d{4}$/, { message: "Year must be a 4-digit string" }),
+  day: z.string().regex(/^\d+$/, { message: "Day must be a positive integer" }),
+});
+
 export default async function QuestionPage({ params }: QuestionPageProps) {
-  const { year, day } = await params;
-  // Assuming your file is named like "day1.md" and day comes in as "1", prefix with "day"
+  const parsed = QuestionParamsSchema.safeParse(await params);
+  if (!parsed.success) {
+    return (
+      <div>
+        Invalid parameters:{" "}
+        {parsed.error.flatten().fieldErrors.day?.[0] ||
+          parsed.error.flatten().fieldErrors.year?.[0]}
+      </div>
+    );
+  }
+
+  const { year, day } = parsed.data;
   const questionData = await getQuestionData(year, `day${day}`);
 
   if (!questionData) {
