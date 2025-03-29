@@ -1,4 +1,4 @@
-name: Lint
+name: Builds
 
 on:
   pull_request:
@@ -7,8 +7,8 @@ on:
     branches: [main, master]
 
 jobs:
-  lint:
-    name: ESLint
+  build:
+    name: Build
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -28,5 +28,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run ESLint
-        run: pnpm run lint
+      - name: Run Build
+        env:
+          DATABASE_URL: "postgresql://dummy_url:dummy_user@dummy_domain.tech"
+          AUTH_SECRET: "auth_secret"
+          AUTH_GOOGLE_CLIENT_ID: "dummy_id.apps.googleusercontent.com"
+          AUTH_GOOGLE_CLIENT_SECRET: "client-secretapplication"
+        run: pnpm run build

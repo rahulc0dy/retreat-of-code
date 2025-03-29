@@ -57,7 +57,7 @@ const Navigation = async () => {
   const session = await auth();
   return (
     <nav className="items-center p-2">
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4">
         <h1 className="text-lavender text-lg font-medium">Retreat of Code</h1>
         {navLinks.sections.map((item) => (
           <Link
@@ -81,9 +81,9 @@ const Navigation = async () => {
           )}
         </div>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4">
         {/* TODO: Year logic */}
-        <h1 className="text-lavender/40">year=2024</h1>
+        <h1 className="text-lavender/40">year=2025</h1>
         {navLinks.info.map((item) => (
           <Link
             href={item.href}

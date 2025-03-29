@@ -36,8 +36,12 @@
   text-shadow: 0 0 2px currentColor;
 }
 
-code {
-  @apply text-text bg-crust border-overlay-0/50 border p-3 font-mono;
+pre code {
+  @apply bg-crust border-overlay-0/50 block w-max overflow-x-auto border p-1 whitespace-pre;
+}
+
+:not(pre) > code {
+  @apply text-text bg-crust border-overlay-0/50 w-max border p-1 font-mono;
 }
 
 body {
