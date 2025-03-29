@@ -37,7 +37,7 @@
 }
 
 pre code {
-  @apply bg-crust border-overlay-0/50 block overflow-x-auto border p-1 whitespace-pre;
+  @apply bg-crust border-overlay-0/50 block w-max overflow-x-auto border p-1 whitespace-pre;
 }
 
 :not(pre) > code {

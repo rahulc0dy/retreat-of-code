@@ -2,16 +2,14 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import { remark } from "remark";
-import html from "remark-html";
 
 export interface QuestionData {
   year: string;
   day: string;
-  contentHtml: string;
+  content: string;
   title?: string;
   difficulty?: string;
-  [key: string]: any;
+  [key: string]: string | number | boolean | undefined;
 }
 
 const questionsDirectory = path.join(process.cwd(), "questions");
@@ -20,10 +18,18 @@ const questionsDirectory = path.join(process.cwd(), "questions");
  * Returns an array of directory names inside the questions folder.
  */
 export function getAllYears(): string[] {
-  return fs.readdirSync(questionsDirectory).filter((name) => {
-    const fullPath = path.join(questionsDirectory, name);
-    return fs.statSync(fullPath).isDirectory();
-  });
+  try {
+    if (!fs.existsSync(questionsDirectory)) {
+      return [];
+    }
+    return fs.readdirSync(questionsDirectory).filter((name) => {
+      const fullPath = path.join(questionsDirectory, name);
+      return fs.statSync(fullPath).isDirectory();
+    });
+  } catch (error) {
+    console.error("Error reading years directories:", error);
+    return [];
+  }
 }
 
 /**
@@ -55,7 +61,7 @@ export function getAllQuestionsForYear(
 
 /**
  * Reads a specific Markdown file for a given year and day,
- * parses the front matter, and converts the content to HTML.
+ * parses the front matter, and returns the raw Markdown content.
  *
  * @param year - The year directory.
  * @param day - The file name without extension (e.g., "day1").
@@ -68,16 +74,21 @@ export async function getQuestionData(
   const fullPath = path.join(questionsDirectory, year, `${day}.md`);
   if (!fs.existsSync(fullPath)) return null;
 
-  const fileContents = fs.readFileSync(fullPath, "utf8");
-  const { content, data } = matter(fileContents);
+  try {
+    const fileContents = fs.readFileSync(fullPath, "utf8");
+    const { content, data } = matter(fileContents);
 
-  const processedContent = await remark().use(html).process(content);
-  const contentHtml = processedContent.toString();
-
-  return {
-    year,
-    day,
-    contentHtml,
-    ...data,
-  };
+    return {
+      year,
+      day,
+      content, // raw markdown text
+      ...data,
+    };
+  } catch (error) {
+    console.error(
+      `Error processing question data for year ${year}, day ${day}:`,
+      error
+    );
+    return null;
+  }
 }

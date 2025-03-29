@@ -12,7 +12,6 @@ In a far-off land, secret messages are transmitted using a peculiar protocol. Ea
 
 Your task is to decode the signal by computing the sum of these numbers as described.
 
----
 
 ### **Example**
 
@@ -20,7 +19,6 @@ Your task is to decode the signal by computing the sum of these numbers as descr
 
 ```
 3 3 3 4 4 1 1 2 2 2
-
 ```
 
 **Explanation:**
@@ -36,10 +34,8 @@ Your task is to decode the signal by computing the sum of these numbers as descr
 
 ```
 10
-
 ```
 
----
 
 ### **Input Format**
 
