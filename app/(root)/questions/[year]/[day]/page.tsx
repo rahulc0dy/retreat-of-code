@@ -2,6 +2,7 @@ import { getQuestionData } from "@/lib/questions";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import { z } from "zod";
+import AnswerInput from "@/components/AnswerInput";
 
 interface QuestionPageProps {
   params: Promise<{ year: string; day: string }>;
@@ -41,6 +42,10 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
       <article className="max-w-prose font-thin">
         <ReactMarkdown>{questionData.content}</ReactMarkdown>
       </article>
+
+      <Link href={"#"}>Get your input</Link>
+      <AnswerInput questionId={`${year}-${day}`} />
+
       <Link
         href={`/questions/${year}`}
         className="hover:glow mt-4 inline-block"

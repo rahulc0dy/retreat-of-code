@@ -42,6 +42,7 @@ export default async function YearPage({ params }: YearPageProps) {
           </li>
         ))}
       </ul>
+
       <Link
         href="/"
         className="hover:bg-overlay-2/20 text-lavender mt-4 inline-block"
