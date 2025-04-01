@@ -1,4 +1,4 @@
-import { createEnv } from "@t3-oss/env-core";
+import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 import { configDotenv } from "dotenv";
 
@@ -17,9 +17,6 @@ export const {
     AUTH_GOOGLE_CLIENT_ID: z.string(),
     AUTH_GOOGLE_CLIENT_SECRET: z.string(),
   },
-
-  clientPrefix: "PUBLIC_",
-  client: {},
-  runtimeEnv: process.env,
+  experimental__runtimeEnv: process.env,
   emptyStringAsUndefined: true,
 });
