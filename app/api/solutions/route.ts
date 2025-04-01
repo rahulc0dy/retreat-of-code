@@ -1,3 +1,4 @@
 export async function POST(request: Request) {
-  return new Response(await request.json());
+  const { body } = request;
+  return new Response(body);
 }

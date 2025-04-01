@@ -18,8 +18,6 @@ const AnswerInput: React.FC<AnswerInputProps> = ({
 }) => {
   const [answer, setAnswer] = useState("");
   const [message, setMessage] = useState<string | null>(null);
-  console.log(process.env);
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -43,7 +41,7 @@ const AnswerInput: React.FC<AnswerInputProps> = ({
 
     // Use tryCatch to call your API
     const { data: resData, error: resError } = await tryCatch(
-      axios.post(`${NEXT_PUBLIC_API_BASE_URL}/questions/answer`, payload)
+      axios.post(`${NEXT_PUBLIC_API_BASE_URL}/solutions`, payload)
     );
 
     if (resError) {
@@ -56,15 +54,18 @@ const AnswerInput: React.FC<AnswerInputProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-2">
+    <form onSubmit={handleSubmit} className="mt-1">
       <input
         type="text"
-        className="bg-crust border border-gray-300 p-2"
+        className="bg-crust border-overlay-0 min-w-1/3 border border-r-0 p-2"
         placeholder="Enter your answer"
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
       />
-      <button type="submit" className="text-text bg-teal ml-2 p-2">
+      <button
+        type="submit"
+        className="text-text bg-surface-1 border-overlay-0 hover:bg-surface-2 cursor-pointer border p-2"
+      >
         Submit
       </button>
       {message && <div className="mt-2">{message}</div>}
