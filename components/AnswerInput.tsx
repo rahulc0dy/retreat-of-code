@@ -54,13 +54,22 @@ const AnswerInput: React.FC<AnswerInputProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-1">
+    <form
+      onSubmit={handleSubmit}
+      className="mt-1"
+      aria-label="Answer submission form"
+    >
+      <label htmlFor="answer-input" className="sr-only">
+        Enter your answer
+      </label>
       <input
         type="text"
+        id="answer-input"
         className="bg-crust border-overlay-0 min-w-1/3 border border-r-0 p-2"
         placeholder="Enter your answer"
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
+        aria-required="true"
       />
       <button
         type="submit"
@@ -68,7 +77,12 @@ const AnswerInput: React.FC<AnswerInputProps> = ({
       >
         Submit
       </button>
-      {message && <div className="text-green mt-2">{message}</div>}
+
+      {message && (
+        <div className="text-lavender mt-2" role="status" aria-live="polite">
+          {message}
+        </div>
+      )}
     </form>
   );
 };
