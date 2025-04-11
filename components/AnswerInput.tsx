@@ -46,10 +46,10 @@ const AnswerInput: React.FC<AnswerInputProps> = ({
 
     if (resError) {
       console.error(resError);
-      setMessage("Error submitting answer");
+      setMessage(resError.message || "Error submitting answer");
     } else {
       console.log(resData.data);
-      setMessage("Answer submitted successfully!");
+      setMessage(resData.data.message);
     }
   };
 
@@ -68,7 +68,7 @@ const AnswerInput: React.FC<AnswerInputProps> = ({
       >
         Submit
       </button>
-      {message && <div className="mt-2">{message}</div>}
+      {message && <div className="text-green mt-2">{message}</div>}
     </form>
   );
 };
