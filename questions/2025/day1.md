@@ -1,14 +1,14 @@
 ---
 title: The Mystery Signal
 day: 1
+id: 3fc951ca-d226-4d07-a6c4-4541feaaf3d3
 ---
 
 In a far-off land, secret messages are transmitted using a peculiar protocol. Each message is a single line of space-separated integers. The encryption hides the true message by combining the numbers in a special way:
 
-- **Rule:**
-    
-    For each group of consecutive identical numbers, only the first occurrence is counted. That is, if a number appears repeatedly one after the other, add it only once, then move on to the next different number.
-    
+**Rule:**
+
+For each group of consecutive identical numbers, only the first occurrence is counted. That is, if a number appears repeatedly one after the other, add it only once, then move on to the next different number.
 
 Your task is to decode the signal by computing the sum of these numbers as described.
 
@@ -47,5 +47,5 @@ Your task is to decode the signal by computing the sum of these numbers as descr
 
 ### **Constraints**
 
-- Up to 1000 integers per input line.
-- Each integer is between 0 and 1000.
+- Up to `100000` integers per input line.
+- Each integer is between `0` and `2^31-1`

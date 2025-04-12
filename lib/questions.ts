@@ -7,6 +7,7 @@ export interface QuestionData {
   year: string;
   day: string;
   content: string;
+  id: string;
   title?: string;
   difficulty?: string;
   [key: string]: string | number | boolean | undefined;
@@ -78,10 +79,17 @@ export async function getQuestionData(
     const fileContents = fs.readFileSync(fullPath, "utf8");
     const { content, data } = matter(fileContents);
 
+    if (!data.id) {
+      throw new Error(
+        `No id present in front matter. Question: year ${year}, day ${day}`
+      );
+    }
+
     return {
       year,
       day,
-      content, // raw markdown text
+      id: data.id,
+      content,
       ...data,
     };
   } catch (error) {

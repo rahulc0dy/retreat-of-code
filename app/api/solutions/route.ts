@@ -1,15 +1,74 @@
 import { ApiError } from "@/lib/utils/ApiError";
 import { ApiResponse } from "@/lib/utils/ApiResponse";
 import { asyncHandler } from "@/lib/utils/asyncHandler";
+import { answerSubmissionRequestBodySchema } from "@/lib/zod-schemas/requestSchemas";
+import { submissions } from "@/db/schemas/submissions";
+import { db } from "@/db";
+import { answers, users } from "@/db/schemas";
+import { and, count, eq } from "drizzle-orm";
+import crypto from "crypto";
+import { INPUT_GENERATION_SECRET } from "@/env/server";
 
 export const POST = asyncHandler(async (request: Request) => {
   const body = await request.json();
+  const parsedBody = answerSubmissionRequestBodySchema.safeParse(body);
 
-  if (!body.answer || !body.questionId) {
-    throw new ApiError({ message: "Missing required fields.", data: {} });
+  if (parsedBody.error) {
+    throw new ApiError({
+      message: parsedBody.error.message || "Missing required fields.",
+      data: { error: parsedBody.error },
+    });
   }
 
-  // TODO: Implement actual solution checking logic here
+  const { userId, answer, questionId } = parsedBody.data;
 
-  return new ApiResponse({ message: "Success", data: body });
+  const correctAnswer = await db
+    .select({ answer: answers.answer })
+    .from(answers)
+    .where(and(eq(answers.userId, userId), eq(answers.questionId, questionId)))
+    .then((result) => {
+      if (result.length === 0) {
+        throw new ApiError({
+          message:
+            "No answer found for this question. Please generate input first.",
+          data: { questionId, userId },
+        });
+      }
+      return result[0].answer;
+    });
+
+  // Create hash of the answer with the same INPUT_GENERATION_SECRET to match with actual answer
+  const answerHash = crypto
+    .createHmac("sha256", INPUT_GENERATION_SECRET)
+    .update(answer.toString())
+    .digest("hex");
+
+  if (correctAnswer === answerHash) {
+    let totalStars = 0;
+    await db.transaction(async (tx) => {
+      await tx.insert(submissions).values({ answer, userId, questionId });
+      const countResult = await tx
+        .select({ count: count() })
+        .from(submissions)
+        .where(eq(submissions.userId, userId));
+      totalStars = countResult[0].count;
+      await tx
+        .update(users)
+        .set({ stars: totalStars })
+        .where(eq(users.id, userId));
+    });
+    return new ApiResponse({
+      message: "Your answer is correct. You get 1 *",
+      data: { answer: correctAnswer, totalStars },
+    });
+  }
+
+  return new ApiResponse({
+    message: "Your answer is incorrect! Try again.",
+    data: {},
+    success: false,
+    options: {
+      status: 200,
+    },
+  });
 });
