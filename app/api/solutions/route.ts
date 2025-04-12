@@ -23,7 +23,10 @@ export const POST = asyncHandler(async (request: Request) => {
   const correctAnswer = await getAnswer({ userId, questionId });
 
   if (correctAnswer === answer) {
-    await db.insert(submissions).values({ userId, questionId, answer });
+    await db
+      .insert(submissions)
+      .values({ userId, questionId, answer })
+      .onConflictDoNothing();
 
     const newStars = await db
       .select({ count: count() })
