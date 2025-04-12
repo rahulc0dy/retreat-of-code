@@ -23,8 +23,6 @@ export const POST = asyncHandler(async (request: Request) => {
   const correctAnswer = await getAnswer({ userId, questionId });
 
   if (correctAnswer === answer) {
-    const totalStars = 0;
-
     await db.insert(submissions).values({ userId, questionId, answer });
 
     const newStars = await db
@@ -45,7 +43,7 @@ export const POST = asyncHandler(async (request: Request) => {
 
     return new ApiResponse({
       message: "Your answer is correct. You get 1 *",
-      data: { answer: correctAnswer, totalStars },
+      data: { answer: correctAnswer, newStars },
     });
   }
 

@@ -90,13 +90,16 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
           target={"_blank"}
           rel={"noopener noreferrer"}
           referrerPolicy={"no-referrer"}
-          className={"text-mauve glow"}
+          className={"text-mauve"}
         >
-          Get your input
+          {submitted.length > 0
+            ? "The input hasn't changed for you, you can still get it here"
+            : "Get your input"}
         </Link>
         {submitted.length > 0 ? (
-          <p className={"glow text-yellow"}>
-            Your answer was {submitted[0]?.answer}
+          <p className={"glow text-yellow mt-5"}>
+            Your answer was {submitted[0]?.answer}. You got{" "}
+            <span className={"text-yellow"}>1*</span> for this question.
           </p>
         ) : (
           <AnswerInput questionId={`${questionData.id}`} userId={userId} />
