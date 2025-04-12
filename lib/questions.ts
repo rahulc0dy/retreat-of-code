@@ -79,6 +79,12 @@ export async function getQuestionData(
     const fileContents = fs.readFileSync(fullPath, "utf8");
     const { content, data } = matter(fileContents);
 
+    if (!data.id) {
+      throw new Error(
+        `No id present in front matter. Question: year ${year}, day ${day}`
+      );
+    }
+
     return {
       year,
       day,
