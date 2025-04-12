@@ -83,7 +83,7 @@ export async function getQuestionData(
       year,
       day,
       id: data.id,
-      content, // raw markdown text
+      content,
       ...data,
     };
   } catch (error) {

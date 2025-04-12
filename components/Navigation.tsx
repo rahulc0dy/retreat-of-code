@@ -3,6 +3,9 @@ import Link from "next/link";
 import SignInButton from "@/components/SignInButton";
 import { auth } from "@/auth";
 import SignOutButton from "@/components/SignOutButton";
+import { db } from "@/db";
+import { users } from "@/db/schemas";
+import { eq } from "drizzle-orm";
 
 interface NavLink {
   label: string;
@@ -55,6 +58,15 @@ const navLinks: NavLinks = {
 
 const Navigation = async () => {
   const session = await auth();
+
+  const data = session?.user?.id
+    ? await db
+        .select({ stars: users.stars })
+        .from(users)
+        .where(eq(users.id, session?.user?.id))
+    : [{ stars: "unknown" }];
+
+  const stars = data[0].stars;
   return (
     <nav className="items-center p-2">
       <div className="flex flex-wrap items-center gap-4">
@@ -76,7 +88,7 @@ const Navigation = async () => {
             <>
               <SignOutButton className={"mr-4"} />
               <p className="mr-2 inline">{session?.user.name}</p>
-              <span className="text-yellow">{session.user.stars}*</span>
+              <span className="text-yellow">{stars}*</span>
             </>
           )}
         </div>
