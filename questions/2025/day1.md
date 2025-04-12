@@ -1,6 +1,7 @@
 ---
 title: The Mystery Signal
 day: 1
+id: 3fc951ca-d226-4d07-a6c4-4541feaaf3d3
 ---
 
 In a far-off land, secret messages are transmitted using a peculiar protocol. Each message is a single line of space-separated integers. The encryption hides the true message by combining the numbers in a special way:

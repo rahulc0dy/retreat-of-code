@@ -76,7 +76,7 @@ const Navigation = async () => {
             <>
               <SignOutButton className={"mr-4"} />
               <p className="mr-2 inline">{session?.user.name}</p>
-              <span className="text-yellow">12*</span>
+              <span className="text-yellow">{session.user.stars}*</span>
             </>
           )}
         </div>

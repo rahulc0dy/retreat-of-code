@@ -7,6 +7,7 @@ export interface QuestionData {
   year: string;
   day: string;
   content: string;
+  id: string;
   title?: string;
   difficulty?: string;
   [key: string]: string | number | boolean | undefined;
@@ -81,6 +82,7 @@ export async function getQuestionData(
     return {
       year,
       day,
+      id: data.id,
       content, // raw markdown text
       ...data,
     };

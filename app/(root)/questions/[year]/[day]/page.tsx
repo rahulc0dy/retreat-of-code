@@ -3,6 +3,7 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import { z } from "zod";
 import AnswerInput from "@/components/AnswerInput";
+import { auth } from "@/auth";
 
 interface QuestionPageProps {
   params: Promise<{ year: string; day: string }>;
@@ -27,6 +28,9 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
     );
   }
 
+  const session = await auth();
+  const userId = session?.user?.id;
+
   const { year, day } = parsed.data;
   const questionData = await getQuestionData(year, `day${day}`);
 
@@ -43,12 +47,28 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
         <ReactMarkdown>{questionData.content}</ReactMarkdown>
       </article>
 
-      <Link href={"#"}>Get your input</Link>
-      <AnswerInput questionId={`${year}-${day}`} />
+      {userId ? (
+        <>
+          <Link
+            href={`/api/input?userId=${userId}&questionId=${questionData.id}`}
+            target={"_blank"}
+            rel={"noopener noreferrer"}
+            referrerPolicy={"no-referrer"}
+            className={"text-mauve glow"}
+          >
+            Get your input
+          </Link>
+          <AnswerInput questionId={`${questionData.id}`} userId={userId} />
+        </>
+      ) : (
+        <p className={"glow text-peach py-2"}>
+          Please Sign In to Your Account to Submit an Answer.
+        </p>
+      )}
 
       <Link
         href={`/questions/${year}`}
-        className="hover:glow mt-4 inline-block"
+        className="hover:glow text-lavender mt-4 inline-block"
       >
         Back to {year} Questions
       </Link>
