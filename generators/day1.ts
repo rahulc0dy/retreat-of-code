@@ -93,11 +93,8 @@ export async function generateAns({
   userId: string;
   questionId: string;
 }): Promise<number> {
-  // Use an environment variable (or fallback value) for the secret
-  const secret = process.env.INPUT_GENERATION_SECRET || "default_secret";
-
   // Combine the userId, questionId, and secret to create a seed string
-  const seedString = userId + questionId + secret;
+  const seedString = userId + questionId + INPUT_GENERATION_SECRET;
 
   // Generate the seed and PRNG function.
   const seed = cyrb128(seedString);

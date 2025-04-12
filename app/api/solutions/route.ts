@@ -26,7 +26,16 @@ export const POST = asyncHandler(async (request: Request) => {
     .select({ answer: answers.answer })
     .from(answers)
     .where(and(eq(answers.userId, userId), eq(answers.questionId, questionId)))
-    .then((result) => result[0].answer);
+    .then((result) => {
+      if (result.length === 0) {
+        throw new ApiError({
+          message:
+            "No answer found for this question. Please generate input first.",
+          data: { questionId, userId },
+        });
+      }
+      return result[0].answer;
+    });
 
   // Create hash of the answer with the same INPUT_GENERATION_SECRET to match with actual answer
   const answerHash = crypto
@@ -35,19 +44,22 @@ export const POST = asyncHandler(async (request: Request) => {
     .digest("hex");
 
   if (correctAnswer === answerHash) {
-    await db.insert(submissions).values({ answer, userId, questionId });
-    const totalStars = await db
-      .select({ count: count() })
-      .from(submissions)
-      .where(eq(submissions.userId, userId))
-      .then((result) => result[0].count);
-    await db
-      .update(users)
-      .set({ stars: totalStars })
-      .where(eq(users.id, userId));
+    let totalStars = 0;
+    await db.transaction(async (tx) => {
+      await tx.insert(submissions).values({ answer, userId, questionId });
+      const countResult = await tx
+        .select({ count: count() })
+        .from(submissions)
+        .where(eq(submissions.userId, userId));
+      totalStars = countResult[0].count;
+      await tx
+        .update(users)
+        .set({ stars: totalStars })
+        .where(eq(users.id, userId));
+    });
     return new ApiResponse({
       message: "Your answer is correct. You get 1 *",
-      data: { answer: correctAnswer },
+      data: { answer: correctAnswer, totalStars },
     });
   }
 

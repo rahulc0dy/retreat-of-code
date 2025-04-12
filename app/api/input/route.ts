@@ -27,7 +27,6 @@ export async function GET(req: Request) {
   try {
     const input = await getInput(parsed.data);
 
-    // Check if answer already in the db.
     const existingAnswerEntry = await db
       .select({ answer: answers.answer })
       .from(answers)
@@ -38,6 +37,7 @@ export async function GET(req: Request) {
         )
       );
 
+    // Check if there are no existing answers
     if (!existingAnswerEntry || existingAnswerEntry.length < 1) {
       const answer = await getAnswer(parsed.data);
       const answerHash = crypto
