@@ -3,4 +3,3 @@ export * from "./accounts";
 export * from "./sessions";
 export * from "./verificationTokens";
 export * from "./submissions";
-export * from "./answers";
