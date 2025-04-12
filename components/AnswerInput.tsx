@@ -42,6 +42,8 @@ const AnswerInput: React.FC<AnswerInputProps> = ({ questionId, userId }) => {
     } else {
       console.log(resData.data);
       setMessage(resData.data.message);
+      if (resData.data.success)
+        setTimeout(() => window.location.reload(), 2000);
     }
   };
 

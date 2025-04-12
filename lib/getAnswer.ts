@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { generateAns } from "@/generators/day1";
 
 interface GenerateAnsProps {
   userId: string;
@@ -10,13 +11,17 @@ const generateAnsPropsSchema = z.object({
   questionId: z.string().uuid().nonempty(),
 });
 
-export async function generateAns({ userId, questionId }: GenerateAnsProps) {
+export async function getAnswer({
+  userId,
+  questionId,
+}: GenerateAnsProps): Promise<string> {
   const parsedData = generateAnsPropsSchema.safeParse({ userId, questionId });
 
   if (parsedData.error) {
     throw new Error(parsedData.error.message);
   }
 
-  // dummy answer
-  return "1000";
+  const answer = await generateAns(parsedData.data);
+
+  return answer.toString();
 }

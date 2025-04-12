@@ -1,12 +1,13 @@
 import { ApiError } from "@/lib/utils/ApiError";
 import { ApiResponse } from "@/lib/utils/ApiResponse";
 import { asyncHandler } from "@/lib/utils/asyncHandler";
-import { generateAns } from "@/lib/generateAns";
 import { answerSubmissionRequestBodySchema } from "@/lib/zod-schemas/requestSchemas";
 import { submissions } from "@/db/schemas/submissions";
 import { db } from "@/db";
-import { users } from "@/db/schemas";
-import { eq } from "drizzle-orm";
+import { answers, users } from "@/db/schemas";
+import { and, count, eq } from "drizzle-orm";
+import crypto from "crypto";
+import { INPUT_GENERATION_SECRET } from "@/env/server";
 
 export const POST = asyncHandler(async (request: Request) => {
   const body = await request.json();
@@ -21,24 +22,41 @@ export const POST = asyncHandler(async (request: Request) => {
 
   const { userId, answer, questionId } = parsedBody.data;
 
-  // TODO: Implement actual solution checking logic here
+  const correctAnswer = await db
+    .select({ answer: answers.answer })
+    .from(answers)
+    .where(and(eq(answers.userId, userId), eq(answers.questionId, questionId)))
+    .then((result) => result[0].answer);
 
-  const correctAnswer = await generateAns({ userId, questionId });
-  const prevStars = (
-    await db
-      .select({ stars: users.stars })
-      .from(users)
-      .where(eq(users.id, userId))
-  )[0].stars;
+  // Create hash of the answer with the same INPUT_GENERATION_SECRET to match with actual answer
+  const answerHash = crypto
+    .createHmac("sha256", INPUT_GENERATION_SECRET)
+    .update(answer.toString())
+    .digest("hex");
 
-  if (correctAnswer === answer) {
+  if (correctAnswer === answerHash) {
     await db.insert(submissions).values({ answer, userId, questionId });
-    await db.update(users).set({ stars: prevStars + 1 });
+    const totalStars = await db
+      .select({ count: count() })
+      .from(submissions)
+      .where(eq(submissions.userId, userId))
+      .then((result) => result[0].count);
+    await db
+      .update(users)
+      .set({ stars: totalStars })
+      .where(eq(users.id, userId));
     return new ApiResponse({
-      message: "Your answer is correct.",
+      message: "Your answer is correct. You get 1 *",
       data: { answer: correctAnswer },
     });
   }
 
-  return new ApiResponse({ message: "Your answer is incorrect.", data: {} });
+  return new ApiResponse({
+    message: "Your answer is incorrect! Try again.",
+    data: {},
+    success: false,
+    options: {
+      status: 200,
+    },
+  });
 });

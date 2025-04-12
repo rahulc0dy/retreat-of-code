@@ -4,6 +4,9 @@ import ReactMarkdown from "react-markdown";
 import { z } from "zod";
 import AnswerInput from "@/components/AnswerInput";
 import { auth } from "@/auth";
+import { submissions } from "@/db/schemas";
+import { db } from "@/db";
+import { and, eq } from "drizzle-orm";
 
 interface QuestionPageProps {
   params: Promise<{ year: string; day: string }>;
@@ -38,6 +41,40 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
     return <div className="p-4 text-red-500">Question not found.</div>;
   }
 
+  if (!userId) {
+    return (
+      <main className="p-2">
+        <h1 className="mb-4">
+          --- Day: {day} - {questionData.title || `${year} - day${day}`} ---
+        </h1>
+        <article className="max-w-prose font-thin">
+          <ReactMarkdown>{questionData.content}</ReactMarkdown>
+        </article>
+
+        <p className={"glow text-peach py-2"}>
+          Please Sign In to Your Account to Submit an Answer.
+        </p>
+
+        <Link
+          href={`/questions/${year}`}
+          className="hover:glow text-lavender mt-4 inline-block"
+        >
+          Back to {year} Questions
+        </Link>
+      </main>
+    );
+  }
+
+  const submitted = await db
+    .select()
+    .from(submissions)
+    .where(
+      and(
+        eq(submissions.userId, userId),
+        eq(submissions.questionId, questionData.id)
+      )
+    );
+
   return (
     <main className="p-2">
       <h1 className="mb-4">
@@ -47,24 +84,24 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
         <ReactMarkdown>{questionData.content}</ReactMarkdown>
       </article>
 
-      {userId ? (
-        <>
-          <Link
-            href={`/api/input?userId=${userId}&questionId=${questionData.id}`}
-            target={"_blank"}
-            rel={"noopener noreferrer"}
-            referrerPolicy={"no-referrer"}
-            className={"text-mauve glow"}
-          >
-            Get your input
-          </Link>
+      <>
+        <Link
+          href={`/api/input?userId=${userId}&questionId=${questionData.id}`}
+          target={"_blank"}
+          rel={"noopener noreferrer"}
+          referrerPolicy={"no-referrer"}
+          className={"text-mauve glow"}
+        >
+          Get your input
+        </Link>
+        {submitted.length > 0 ? (
+          <p className={"glow text-yellow"}>
+            Your answer was {submitted[0]?.answer}
+          </p>
+        ) : (
           <AnswerInput questionId={`${questionData.id}`} userId={userId} />
-        </>
-      ) : (
-        <p className={"glow text-peach py-2"}>
-          Please Sign In to Your Account to Submit an Answer.
-        </p>
-      )}
+        )}
+      </>
 
       <Link
         href={`/questions/${year}`}

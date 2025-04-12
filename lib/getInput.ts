@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { generateInput } from "@/generators/day1";
 
 interface GenerateInputProps {
   userId: string;
@@ -10,15 +11,17 @@ const generateInputPropsSchema = z.object({
   questionId: z.string().uuid("Invalid Question Id").nonempty(),
 });
 
-export const generateInput = async ({
+export const getInput = async ({
   userId,
   questionId,
-}: GenerateInputProps) => {
+}: GenerateInputProps): Promise<string> => {
   const parsed = generateInputPropsSchema.safeParse({ questionId, userId });
   if (!parsed.success) throw new Error("Failed to generate input");
 
-  // TODO: Generate actual input from quid, uid and env secret
+  const input = generateInput({
+    userId: parsed.data.userId,
+    questionId: parsed.data.questionId,
+  });
 
-  // dummy input
-  return `${userId}:${questionId}: ${Math.random().toString(36).padStart(2, "0")}`;
+  return input;
 };
