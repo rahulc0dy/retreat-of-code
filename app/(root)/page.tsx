@@ -12,13 +12,16 @@ export default function HomePage() {
   return (
     <main className="px-2">
       <ul className="">
-        {years.map((year) => (
-          <li key={year} className="block">
-            <Link href={`/questions/${year}`} className="hover:bg-overlay-2/20">
-              {year}
-            </Link>
-          </li>
-        ))}
+        {years.map((year) => {
+          const safeYear = encodeURIComponent(year);
+          return (
+            <li key={year} className="block">
+              <Link href={`/questions/${safeYear}`} className="hover:bg-overlay-2/20">
+                {year}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </main>
   );

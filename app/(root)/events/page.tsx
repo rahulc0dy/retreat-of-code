@@ -18,16 +18,19 @@ const EventsPage: React.FunctionComponent = () => {
       <section>
         <h2 className="text-text my-3 text-lg">--- Past Events ---</h2>
         <ul className="space-y-1">
-          {years.map((year) => (
-            <li key={year}>
-              <Link
-                href={`/questions/${year}`}
-                className="text-lavender/60 hover:text-lavender"
-              >
-                [{year}]
-              </Link>
-            </li>
-          ))}
+          {years.map((year) => {
+            const safeYear = encodeURIComponent(year);
+            return (
+              <li key={year}>
+                <Link
+                  href={`/questions/${safeYear}`}
+                  className="text-lavender/60 hover:text-lavender"
+                >
+                  [{year}]
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </section>
     </main>

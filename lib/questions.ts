@@ -62,10 +62,11 @@ export function getAllQuestionsForYear(year: string): QuestionMeta[] {
     const fileContents = fs.readFileSync(fullPath, "utf8");
     const { data } = matter(fileContents);
     const rawDay = data.day ? String(data.day) : fileBase.replace(/^day/, "");
+    const cleanDay = String(parseInt(rawDay.replace(/\D/g, ""), 10) || 0);
 
     return {
-      day: rawDay,
-      title: data.title || `Day ${rawDay}`,
+      day: cleanDay,
+      title: data.title || `Day ${cleanDay}`,
       id: data.id || "",
     };
   });

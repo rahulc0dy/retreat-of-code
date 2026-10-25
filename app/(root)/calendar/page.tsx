@@ -18,16 +18,20 @@ export default function CalendarPage() {
       <section>
         <h2 className="text-text my-3 text-lg">--- {year} Puzzles ---</h2>
         <ul className="space-y-1">
-          {questions.map((q) => (
-            <li key={q.day}>
-              <Link
-                href={`/questions/${year}/${q.day}`}
-                className="text-lavender/60 hover:text-lavender"
-              >
-                [Day {q.day}: {q.title}]
-              </Link>
-            </li>
-          ))}
+          {questions.map((q) => {
+            const safeYear = encodeURIComponent(year);
+            const safeDay = encodeURIComponent(q.day);
+            return (
+              <li key={q.day}>
+                <Link
+                  href={`/questions/${safeYear}/${safeDay}`}
+                  className="text-lavender/60 hover:text-lavender"
+                >
+                  [Day {q.day}: {q.title}]
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </section>
     </main>
