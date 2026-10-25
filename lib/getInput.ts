@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { generateInput } from "@/generators/day1";
+import { getGeneratorByQuestionId } from "@/generators";
 
 interface GenerateInputProps {
   userId: string;
@@ -16,9 +16,18 @@ export const getInput = async ({
   questionId,
 }: GenerateInputProps): Promise<string> => {
   const parsed = generateInputPropsSchema.safeParse({ questionId, userId });
-  if (!parsed.success) throw new Error("Failed to generate input");
+  if (!parsed.success) {
+    throw new Error("Failed to generate input: Invalid parameters");
+  }
 
-  const input = generateInput({
+  const generator = getGeneratorByQuestionId(parsed.data.questionId);
+  if (!generator) {
+    throw new Error(
+      `No generator registered for questionId: ${parsed.data.questionId}`
+    );
+  }
+
+  const input = generator.generateInput({
     userId: parsed.data.userId,
     questionId: parsed.data.questionId,
   });

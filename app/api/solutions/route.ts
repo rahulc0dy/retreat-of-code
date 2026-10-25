@@ -4,7 +4,7 @@ import { asyncHandler } from "@/lib/utils/asyncHandler";
 import { answerSubmissionRequestBodySchema } from "@/lib/zod-schemas/requestSchemas";
 import { db } from "@/db";
 import { submissions, users } from "@/db/schemas";
-import { and, count, eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { getAnswer } from "@/lib/getAnswer";
 
 export const POST = asyncHandler(async (request: Request) => {
@@ -23,26 +23,22 @@ export const POST = asyncHandler(async (request: Request) => {
   const correctAnswer = await getAnswer({ userId, questionId });
 
   if (correctAnswer === answer) {
-    await db
-      .insert(submissions)
-      .values({ userId, questionId, answer })
-      .onConflictDoNothing();
+    const newStars = await db.transaction(async (tx) => {
+      await tx
+        .insert(submissions)
+        .values({ userId, questionId, answer })
+        .onConflictDoNothing();
 
-    const newStars = await db
-      .select({ count: count() })
-      .from(submissions)
-      .where(
-        and(
-          eq(submissions.userId, userId),
-          eq(submissions.questionId, questionId)
-        )
-      )
-      .then((result) => result[0]);
+      const [updatedUser] = await tx
+        .update(users)
+        .set({
+          stars: sql`(SELECT count(*)::int FROM ${submissions} WHERE ${submissions.userId} = ${userId})`,
+        })
+        .where(eq(users.id, userId))
+        .returning({ stars: users.stars });
 
-    await db
-      .update(users)
-      .set({ stars: newStars.count })
-      .where(eq(users.id, userId));
+      return updatedUser ? { count: updatedUser.stars } : { count: 0 };
+    });
 
     return new ApiResponse({
       message: "Your answer is correct. You get 1 *",

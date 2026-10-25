@@ -31,9 +31,14 @@ const AnswerInput: React.FC<AnswerInputProps> = ({ questionId, userId }) => {
     // Prepare the payload (including the questionId for context)
     const payload = parsed.data;
 
+    const baseUrl = NEXT_PUBLIC_API_BASE_URL.replace(/\/+$/, "");
+    const endpoint = baseUrl.endsWith("/solutions")
+      ? baseUrl
+      : `${baseUrl}/solutions`;
+
     // Use tryCatch to call your API
     const { data: resData, error: resError } = await tryCatch(
-      axios.post(`${NEXT_PUBLIC_API_BASE_URL}/solutions`, payload)
+      axios.post(endpoint, payload)
     );
 
     if (resError) {

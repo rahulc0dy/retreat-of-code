@@ -8,7 +8,7 @@ configDotenv({
 
 export const { NEXT_PUBLIC_API_BASE_URL } = createEnv({
   client: {
-    NEXT_PUBLIC_API_BASE_URL: z.string().url(),
+    NEXT_PUBLIC_API_BASE_URL: z.string().default("/api"),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,

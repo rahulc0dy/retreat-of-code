@@ -31,16 +31,20 @@ export default async function YearPage({ params }: YearPageProps) {
       <h1 className="">Questions for {year}</h1>
       <br />
       <ul className="">
-        {questions.map((q) => (
-          <li key={q.day} className="mb-2">
-            <Link
-              href={`/questions/${year}/${q.day}`}
-              className="hover:bg-overlay-2/20"
-            >
-              Day {q.day}
-            </Link>
-          </li>
-        ))}
+        {questions.map((q) => {
+          const safeYear = encodeURIComponent(year);
+          const safeDay = encodeURIComponent(q.day);
+          return (
+            <li key={q.day} className="mb-2">
+              <Link
+                href={`/questions/${safeYear}/${safeDay}`}
+                className="hover:bg-overlay-2/20"
+              >
+                Day {q.day}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
 
       <Link

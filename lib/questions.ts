@@ -13,20 +13,29 @@ export interface QuestionData {
   [key: string]: string | number | boolean | undefined;
 }
 
+export interface QuestionMeta {
+  day: string;
+  title: string;
+  id: string;
+}
+
 const questionsDirectory = path.join(process.cwd(), "questions");
 
 /**
- * Returns an array of directory names inside the questions folder.
+ * Returns an array of directory names inside the questions folder, sorted descending.
  */
 export function getAllYears(): string[] {
   try {
     if (!fs.existsSync(questionsDirectory)) {
       return [];
     }
-    return fs.readdirSync(questionsDirectory).filter((name) => {
-      const fullPath = path.join(questionsDirectory, name);
-      return fs.statSync(fullPath).isDirectory();
-    });
+    return fs
+      .readdirSync(questionsDirectory)
+      .filter((name) => {
+        const fullPath = path.join(questionsDirectory, name);
+        return fs.statSync(fullPath).isDirectory() && /^\d{4}$/.test(name);
+      })
+      .sort((a, b) => Number(b) - Number(a));
   } catch (error) {
     console.error("Error reading years directories:", error);
     return [];
@@ -34,30 +43,39 @@ export function getAllYears(): string[] {
 }
 
 /**
- * Returns an array of question metadata for a given year.
+ * Returns an array of question metadata for a given year, sorted by day ascending.
  *
  * @param year - The year folder (e.g., "2025").
- * @returns An array of objects containing day and title.
+ * @returns An array of objects containing day, title, and id.
  */
-export function getAllQuestionsForYear(
-  year: string
-): { day: string; title?: string }[] {
+export function getAllQuestionsForYear(year: string): QuestionMeta[] {
   const yearPath = path.join(questionsDirectory, year);
   if (!fs.existsSync(yearPath)) return [];
+
   const fileNames = fs
     .readdirSync(yearPath)
     .filter((file) => file.endsWith(".md"));
-  const questions = fileNames.map((fileName) => {
-    const day = fileName.replace(/\.md$/, "");
+
+  const questions: QuestionMeta[] = fileNames.map((fileName) => {
+    const fileBase = fileName.replace(/\.md$/, "");
     const fullPath = path.join(yearPath, fileName);
     const fileContents = fs.readFileSync(fullPath, "utf8");
     const { data } = matter(fileContents);
+    const rawDay = data.day ? String(data.day) : fileBase.replace(/^day/, "");
+    const cleanDay = String(parseInt(rawDay.replace(/\D/g, ""), 10) || 0);
+
     return {
-      day: data.day || day,
-      title: data.title || day,
+      day: cleanDay,
+      title: data.title || `Day ${cleanDay}`,
+      id: data.id || "",
     };
   });
-  return questions;
+
+  return questions.sort((a, b) => {
+    const numA = parseInt(a.day.replace(/\D/g, ""), 10) || 0;
+    const numB = parseInt(b.day.replace(/\D/g, ""), 10) || 0;
+    return numA - numB;
+  });
 }
 
 /**
@@ -65,14 +83,15 @@ export function getAllQuestionsForYear(
  * parses the front matter, and returns the raw Markdown content.
  *
  * @param year - The year directory.
- * @param day - The file name without extension (e.g., "day1").
+ * @param day - The file name with or without prefix (e.g. "1" or "day1").
  * @returns The parsed question data.
  */
 export async function getQuestionData(
   year: string,
   day: string
 ): Promise<QuestionData | null> {
-  const fullPath = path.join(questionsDirectory, year, `${day}.md`);
+  const normalizedDay = day.startsWith("day") ? day : `day${day}`;
+  const fullPath = path.join(questionsDirectory, year, `${normalizedDay}.md`);
   if (!fs.existsSync(fullPath)) return null;
 
   try {
@@ -87,7 +106,7 @@ export async function getQuestionData(
 
     return {
       year,
-      day,
+      day: normalizedDay.replace(/^day/, ""),
       id: data.id,
       content,
       ...data,
