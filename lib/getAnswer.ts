@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { generateAns } from "@/generators/day1";
+import { getGeneratorByQuestionId } from "@/generators";
 
 interface GenerateAnsProps {
   userId: string;
@@ -21,7 +21,14 @@ export async function getAnswer({
     throw new Error(parsedData.error.message);
   }
 
-  const answer = await generateAns(parsedData.data);
+  const generator = getGeneratorByQuestionId(parsedData.data.questionId);
+  if (!generator) {
+    throw new Error(
+      `No generator registered for questionId: ${parsedData.data.questionId}`
+    );
+  }
+
+  const answer = await generator.generateAns(parsedData.data);
 
   return answer.toString();
 }

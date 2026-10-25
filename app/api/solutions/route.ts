@@ -4,7 +4,7 @@ import { asyncHandler } from "@/lib/utils/asyncHandler";
 import { answerSubmissionRequestBodySchema } from "@/lib/zod-schemas/requestSchemas";
 import { db } from "@/db";
 import { submissions, users } from "@/db/schemas";
-import { and, count, eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import { getAnswer } from "@/lib/getAnswer";
 
 export const POST = asyncHandler(async (request: Request) => {
@@ -31,12 +31,7 @@ export const POST = asyncHandler(async (request: Request) => {
     const newStars = await db
       .select({ count: count() })
       .from(submissions)
-      .where(
-        and(
-          eq(submissions.userId, userId),
-          eq(submissions.questionId, questionId)
-        )
-      )
+      .where(eq(submissions.userId, userId))
       .then((result) => result[0]);
 
     await db
